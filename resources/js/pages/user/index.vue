@@ -1,47 +1,71 @@
 <template>
-  <admin-layout>
-    <div class="d-flex flex-wrap align-center">
-      <v-text-field v-model="search" prepend-inner-icon="mdi-magnify" label="Search" single-line dense clearable hide-details class="py-4" solo style="max-width: 300px" />
-      <v-spacer />
-      <v-btn color="primary" @click="OpenDialog">
-        <v-icon dark left> mdi-plus </v-icon> New
-      </v-btn>
-    </div>
-    <v-data-table
-      :items="users.data"
-      :headers="headers"
-      :header-props="{ sortByText: 'Ordenar por' }"
-      :options.sync="options"
-      :server-items-length="users.total"
-      :loading="isLoadingTable"
-      class="elevation-1"
-      no-data-text="Lo sentimos, no hay nada para mostrar aquí"
-      dense
-      sortByText="Ordenar por"
-      loading-text="Cargando... Espere por favor"
-      :footer-props="{
-        'items-per-page-options' : [15, 25, 35, 45, 75, 150],
-        'show-current-page': true,
-        'show-first-last-page': true,
-        'items-per-page-text': 'Filas por página',
-      }">
-        <template v-slot:[`item.id`]="{ item }">
-            <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                    <v-icon small color="lime" class="mr-2" v-bind="attrs" v-on="on" @click.prevent="EditUser(item)">mdi-pencil</v-icon>
-                </template>
-                <span>Editar usuario</span>
-            </v-tooltip>
+  <admin>
+    <v-card outlined>
+      <v-card-title class="pb-0 mb-0 grey lighten-4">
+        <h3 class="text-muted mb-3 d-sm-flex d-md-none ml-auto mr-auto">Usuarios</h3>
+        <v-row class="fill-height" no-gutters>
+          <v-col cols="12" class="d-flex mb-2">
+            <h3 class="text-muted mt-1 mr-2 d-none d-md-flex d-sm-none d-md-flex">Usuarios</h3>
+            <v-text-field
+            v-model.lazy="search"
+            append-icon="mdi-magnify"
+            label="Buscar usuarios"
+            dense
+            hide-details
+            outlined>
+            </v-text-field>
 
-            <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                    <v-icon small color="red" v-bind="attrs" v-on="on" @click.prevent="DeleteUser(item.id)">mdi-delete</v-icon>
-                </template>
-                <span>Eliminar usuario</span>
-            </v-tooltip>
-        </template>
-    </v-data-table>
+            <v-btn color="primary" class="ml-2 button_add d-none d-sm-none d-md-flex" @click="OpenDialog">
+              AGREGAR USUARIO<v-icon class="ml-1">mdi-arrow-right</v-icon>
+            </v-btn>
 
+            <v-tooltip left>
+              <template v-slot:activator="{ on, attrs }">
+                  <v-btn color="primary" class=" ml-2 button_add d-sm-flex d-md-none" v-bind="attrs" v-on="on" @click="OpenDialog">
+                      <v-icon>mdi-plus-circle-outline</v-icon>
+                  </v-btn>
+              </template>
+              <span>Agregar usuario</span>
+            </v-tooltip>
+          </v-col>
+        </v-row>
+      </v-card-title>
+
+      <v-data-table
+        :items="users.data"
+        :headers="headers"
+        :header-props="{ sortByText: 'Ordenar por' }"
+        :options.sync="options"
+        :server-items-length="users.total"
+        :loading="isLoadingTable"
+        class="elevation-1"
+        no-data-text="Lo sentimos, no hay nada para mostrar aquí"
+        dense
+        sortByText="Ordenar por"
+        loading-text="Cargando... Espere por favor"
+        :footer-props="{
+          'items-per-page-options' : [15, 25, 35, 45, 75, 150],
+          'show-current-page': true,
+          'show-first-last-page': true,
+          'items-per-page-text': 'Filas por página',
+        }">
+          <template v-slot:[`item.id`]="{ item }">
+              <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                      <v-icon small color="lime" class="mr-2" v-bind="attrs" v-on="on" @click.prevent="EditUser(item)">mdi-pencil</v-icon>
+                  </template>
+                  <span>Editar usuario</span>
+              </v-tooltip>
+
+              <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                      <v-icon small color="red" v-bind="attrs" v-on="on" @click.prevent="DeleteUser(item.id)">mdi-delete</v-icon>
+                  </template>
+                  <span>Eliminar usuario</span>
+              </v-tooltip>
+          </template>
+      </v-data-table>
+    </v-card>
 
     <v-dialog v-model="dialog" max-width="650px" style="z-index: 9999;">
       <v-card>
@@ -136,22 +160,23 @@
 
       </v-card>
     </v-dialog>
-  </admin-layout>
+  </admin>
 </template>
 
 <script>
-import AdminLayout from "../../layouts/AdminLayout.vue";
+import Admin from "../../layouts/Admin.vue";
 export default {
   props: ["users"],
-  components: { AdminLayout },
+  components: { Admin },
   data() {
     return {
       headers: [
         { text: "Name", value: "name" },
         { text: "Lastname", value: "lastname" },
+        { text: "Dirección", value: "direction" },
         { text: "Email", value: "email" },
         { text: "Created At", value: "created_at" },
-        { text: "Actions", value: "action", sortable: false },
+        {text: 'Acciones', value: 'id', sortable: false}
       ],
 
       dialog: false,

@@ -1,12 +1,5 @@
 <template>
-  <admin-layout>
-    <v-banner class="mb-4">
-      <div class="d-flex flex-wrap justify-space-between">
-        <h5 class="text-h5 font-weight-bold">Profile</h5>
-        <v-breadcrumbs :items="breadcrumbs" class="pa-0"></v-breadcrumbs>
-      </div>
-    </v-banner>
-
+  <admin>
     <v-card-text>
       <v-form @submit.prevent="register">
         <v-text-field v-model="form.name" prepend-inner-icon="mdi-account" label="Name" outlined dense type="text" :error-messages="form.errors.name" />
@@ -26,28 +19,16 @@
         <v-btn :loading="form.processing" @click.prevent="UpdateProfile" block color="primary" class="mt-3">Register</v-btn>
       </v-form>
     </v-card-text>
-  </admin-layout>
+  </admin>
 </template>
 
 <script>
-import AdminLayout from "../../layouts/AdminLayout.vue";
+import Admin from "../../layouts/Admin.vue";
 export default {
   props: ["auth"],
-  components: { AdminLayout },
+  components: { Admin },
   data() {
     return {
-      breadcrumbs: [
-        {
-          text: "App",
-          disabled: false,
-          href: "/home",
-        },
-        {
-          text: "Profile",
-          disabled: true,
-          href: "/profile",
-        },
-      ],
       showPassword: false,
       isLoading: false,
       form: this.$inertia.form({

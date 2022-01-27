@@ -1,10 +1,8 @@
 require("./bootstrap");
 require("./plugins/vue-toastification");
+
 import Vue from "vue";
-import {
-  App as InertiaApp,
-  plugin as InertiaPlugin
-} from "@inertiajs/inertia-vue";
+import {  App as InertiaApp,   plugin as InertiaPlugin } from "@inertiajs/inertia-vue";
 import { Link } from "@inertiajs/inertia-vue";
 import vuetify from "./plugins/vuetify";
 import { InertiaProgress } from "@inertiajs/progress";
