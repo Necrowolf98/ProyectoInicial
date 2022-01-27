@@ -2,12 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\User\StoreRequest;
+use App\Http\Requests\User\UpdateRequest;
 use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -63,9 +71,22 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        //
+        $user = new User();
+        $user->name = $request->name;
+        $user->lastname = $request->lastname;
+        $user->direction = $request->direction;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return redirect()->back()->with('message', [
+            'title'=> 'Exitoso!',
+            'type' => 'success',
+            'text' => 'Se ha registrado el usuario',
+        ]);
     }
 
     /**
@@ -97,9 +118,27 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(User $user, UpdateRequest $request)
     {
-        //
+        if(!$request == null){
+            if($request->password == null){
+                $user->update($request->except('password'));    
+            }else{
+                $user->update([
+                    'name' => $request->name,
+                    'lastname' => $request->lastname,
+                    'direction' => $request->direction,
+                    'email' => $request->email,
+                    'phone' => $request->phone,
+                    'password' => Hash::make($request->password),
+                ]);    
+            }
+            return redirect()->back()->with('message', [
+                'title'=> 'Exitoso!',
+                'type' => 'success',
+                'text' => 'Se ha actualizado el usuario',
+            ]);
+        }
     }
 
     /**
@@ -108,8 +147,13 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+        return redirect()->back()->with('message', [
+            'title'=> 'Exitoso!',
+            'type' => 'success',
+            'text' => 'Se ha eliminado el usuario',
+        ]);
     }
 }

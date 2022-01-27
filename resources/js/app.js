@@ -1,17 +1,20 @@
 require("./bootstrap");
-require("./plugins/vue-toastification");
+require("./plugins/elementui");
 
 import Vue from "vue";
-import {  App as InertiaApp,   plugin as InertiaPlugin } from "@inertiajs/inertia-vue";
-import { Link } from "@inertiajs/inertia-vue";
 import vuetify from "./plugins/vuetify";
+
+import {  App as InertiaApp, plugin as InertiaPlugin } from "@inertiajs/inertia-vue";
+import { Link } from "@inertiajs/inertia-vue";
 import { InertiaProgress } from "@inertiajs/progress";
+
+window.Fire = new Vue();
 
 Vue.use(InertiaPlugin);
 Vue.component("Link", Link);
 Vue.mixin({ methods: { route: window.route } });
 
-window.Fire = new Vue();
+
 
 const app = document.getElementById("app");
 
@@ -27,4 +30,4 @@ new Vue({
     })
 }).$mount(app);
 
-InertiaProgress.init({ color: "#fff" });
+InertiaProgress.init({ color: "#29d"});

@@ -29,7 +29,7 @@
         "@inertiajs/inertia": "^0.10.1",
         "@inertiajs/inertia-vue": "^0.7.2",
         "@inertiajs/progress": "^0.2.6",
-        "vue-toastification": "^1.7.11",
+        "element-ui": "^2.15.6",
         "vuetify": "^2.5.8"
     }
 }

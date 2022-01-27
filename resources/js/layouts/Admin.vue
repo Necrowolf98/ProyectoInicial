@@ -7,14 +7,21 @@
         <div class="content-wrapper pb-5">
             <section class="content">
                 <v-main>
-                    <v-container fluid>
-                        <slot />
-                    </v-container>
+                    <transition name="slide-fade" mode="out-in">
+                        <div v-if="animate">
+                            <slot />
+                        </div>
+                    </transition>
                 </v-main>
             </section>
         </div>
 
         <Footer></Footer>
+
+        <aside class="control-sidebar control-sidebar-dark">
+
+        </aside>
+        
     </v-app>
 </template>
 
@@ -26,6 +33,16 @@
     export default {
         components: {Navbar, Sidebar, Footer},
         
+        data(){
+            return{
+                animate: false
+            };
+        },
+
+        mounted(){
+            this.animate = true;
+        },
+
         computed: {
             appName() {
                 return this.$page.props.appName;
@@ -38,20 +55,46 @@
 
         watch: {
             $page: {
-            handler() {
-                const message = this.$page.props.flash.message;
-                if (message != null) {
-                    switch (message.type) {
-                        case "success":
-                        this.$toast.success(message.text);
-                        break;
-                        case "error":
-                        this.$toast.error(message.text);
-                        break;
+                handler() {
+                    const message = this.$page.props.flash.message;
+                    if (message != null) {
+                        switch (message.type) {
+                            case "success":
+                                this.$notify({
+                                    title: message.title,
+                                    message: message.text,
+                                    type: message.type,
+                                    duration: 1500
+                                });
+                            break;
+                            case "error":
+                                this.$notify({
+                                    message: message.text,
+                                    type: 'error',
+                                    duration: 1500
+                                });
+                            break;
+                        }
                     }
-                }
-            },
+                },
             },
         },
     }
 </script>
+
+<style>
+.slide-fade-enter{
+    transform: translateX(20px);
+    opacity: 0;
+}
+
+.slide-fade-enter-active,
+.slide-fade-leave-active{
+    transition: all 0.2s ease;
+}
+
+.slide-fade-leave-to{
+    transform: translateX(-20px);
+    opacity: 0;
+}
+</style>
