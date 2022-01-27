@@ -238,42 +238,7 @@ export default {
       this.isUpdate = true;
       this.itemId = item.id;
       this.dialog = true;
-    },
-
-
-    destroy() {
-      this.form.delete(route("employee.destroy", this.itemId), {
-        preverseScroll: true,
-        onSuccess: () => {
-          this.dialogDelete = false;
-          this.itemId = null;
-        },
-      });
-    },
-
-    SubmitUser() {
-      if (this.isUpdate) {
-        this.form.put(route("employee.update", this.itemId), {
-          preverseScroll: true,
-          onSuccess: () => {
-            this.isLoading = false;
-            this.dialog = false;
-            this.isUpdate = false;
-            this.itemId = null;
-            this.form.reset();
-          },
-        });
-      } else {
-        this.form.post(route("employee.store"), {
-          preverseScroll: true,
-          onSuccess: () => {
-            this.isLoading = false;
-            this.dialog = false;
-            this.form.reset();
-          },
-        });
-      }
-    },
+    }
   },
 
   created(){
