@@ -14,8 +14,6 @@ Vue.use(InertiaPlugin);
 Vue.component("Link", Link);
 Vue.mixin({ methods: { route: window.route } });
 
-
-
 const app = document.getElementById("app");
 
 new Vue({

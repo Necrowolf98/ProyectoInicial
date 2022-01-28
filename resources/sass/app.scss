@@ -65,6 +65,12 @@ button:focus{
 }
 /* FIN VUETIFY PARA LOS V-TEXTFIELD NO SE VEAN GIGANTES FUNCIONA CON LA CLASE INPUT_FORM */
 
+/* VUETIFY V-CHECKBOX PONERLO CENTRADO AL CUADRITO */
+.v-input--selection-controls .v-input__slot > .v-label, .v-input--selection-controls .v-radio > .v-label {
+    top: 4px;
+}
+/* VUETIFY V-CHECKBOX PONERLO CENTRADO AL CUADRITO */
+
 html{
      overflow-y: auto !important;
 }

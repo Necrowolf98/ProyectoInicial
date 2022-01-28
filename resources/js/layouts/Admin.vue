@@ -1,10 +1,10 @@
 <template>
     <v-app style="overflow: auto !important;">
-        <Navbar :user="user"></Navbar>
+        <Navbar :auth="user"></Navbar>
 
-        <Sidebar :user="user"></Sidebar>
+        <Sidebar :auth="user"></Sidebar>
 
-        <div class="content-wrapper pb-5">
+        <div class="content-wrapper py-5">
             <section class="content">
                 <v-main>
                     <transition name="slide-fade" mode="out-in">
@@ -49,7 +49,7 @@
             },
 
             user() {
-                return this.$page.props.auth.user;
+                return this.$page.props.auth;
             },
         },
 

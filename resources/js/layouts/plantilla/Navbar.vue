@@ -18,19 +18,19 @@
                 <li class="dropdown li_logout">
                     <a href="#" class="a_logout d-flex pt-1" data-toggle="dropdown">
                         <v-avatar color="rgb(240, 233, 233)" size="33">
-                            <a class="rgb(139, 93, 93)" style="text-decoration: none; color: #252457;" v-text="user.name.charAt(0)+user.lastname.charAt(0)"></a>
+                            <a class="rgb(139, 93, 93)" style="text-decoration: none; color: #252457;" v-text="auth.user.name.charAt(0)+auth.user.lastname.charAt(0)"></a>
                         </v-avatar>
                     </a>
 
                     <div class="dropdown-menu menu_logout dropdown-menu-sm dropdown-menu-right">
                         <div class="text-center py-1">
                             <v-avatar color="rgb(240, 233, 233)" size="37">
-                                <span class="rgb(139, 93, 93)" v-text="user.name.charAt(0)+user.lastname.charAt(0)"></span>
+                                <span class="rgb(139, 93, 93)" v-text="auth.user.name.charAt(0)+auth.user.lastname.charAt(0)"></span>
                             </v-avatar>
                         </div>
-                        <p class="text-muted text-center my-0 p_logout"><strong>{{ user.name.split(' ', 1)+ ' ' +user.lastname }}</strong></p>
-                        <!-- <p class="text-muted text-center my-0 py-1 p_logout"><strong>Rol: </strong>{{ usuario.roles[0].name }}</p> -->
-                        <p class="text-center text-muted mx-3 mb-0 p_logout">{{ user.email }}</p>
+                        <p class="text-muted text-center my-0 p_logout"><strong>{{ auth.user.name.split(' ', 1)+ ' ' +auth.user.lastname }}</strong></p>
+                        <p class="text-muted text-center my-0 py-1 p_logout"><strong>Rol: </strong>{{ auth.user.roles[0].name }}</p>
+                        <p class="text-center text-muted mx-3 mb-0 p_logout">{{ auth.user.email }}</p>
 
                         <div class="text-center mt-2">
                             <a class="text-muted">
@@ -141,7 +141,7 @@
 
 <script>
     export default {
-        props: ["user"],
+        props: ["auth"],
 
         methods: {
             logout() {

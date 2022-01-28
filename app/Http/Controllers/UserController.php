@@ -50,7 +50,7 @@ class UserController extends Controller
         ->orderBy('id', 'desc')
         ->paginate($itemsPerPage);
 
-        return Inertia::render('user/index', [
+        return Inertia::render('users/index', [
             'users' => $user,
         ]);
     }

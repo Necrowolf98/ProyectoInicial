@@ -5,17 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Profile\UpdateRequest;
 use App\Models\User;
 use Inertia\Inertia;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index()
     {
         return Inertia::render('profile/index');
