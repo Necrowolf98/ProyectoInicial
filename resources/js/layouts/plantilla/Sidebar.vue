@@ -53,7 +53,7 @@
 
                     <template v-if="auth.permission.includes('users.index')">
                             <li class="nav-item">
-                                <Link class="nav-link" :href="route('users.index')" :class="route().current('users.index') ? 'active' : ''">
+                                <Link class="nav-link" :href="route('users.index')" :class="route().current('users.index') || route().current('users.show') || route().current('users.permissions')? 'active' : ''">
                                     <i class="nav-icon fas fa-user"></i>
                                     <p>Usuarios</p>
                                 </Link>

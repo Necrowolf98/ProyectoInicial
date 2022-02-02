@@ -34,6 +34,15 @@ class LoginRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'email.required' => 'Los campos son obligatorios',
+            'email.email' => 'Para este campo se require un correo registrado',
+            'password.required' => 'Los campos son obligatorios'
+        ];
+    }
+
     /**
      * Attempt to authenticate the request's credentials.
      *
@@ -47,9 +56,9 @@ class LoginRequest extends FormRequest
 
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
-
+            
             throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
+                'email' => 'Estas credenciales no coinciden con nuestros registros.',
             ]);
         }
 

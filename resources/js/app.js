@@ -17,14 +17,14 @@ Vue.mixin({ methods: { route: window.route } });
 const app = document.getElementById("app");
 
 new Vue({
-  vuetify,
-  render: h =>
+    vuetify,
+    render: h =>
     h(InertiaApp, {
-      props: {
-        title: title => `${title} - My App`,
-        initialPage: JSON.parse(app.dataset.page),
-        resolveComponent: name => require(`./pages/${name}`).default
-      }
+        props: {
+            title: title => `${title} - My App`,
+            initialPage: JSON.parse(app.dataset.page),
+            resolveComponent: name => require(`./pages/${name}`).default
+        }
     })
 }).$mount(app);
 

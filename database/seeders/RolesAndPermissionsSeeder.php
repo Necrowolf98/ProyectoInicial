@@ -20,6 +20,9 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // ROLE MODEL
         $administration = Role::create(['name' => 'Administrador', 'description' => 'Supervisor del sistema']);
+        $secretary = Role::create(['name' => 'Secretaria', 'description' => 'Encargado de los clientes']);
+        $doctor = Role::create(['name' => 'Doctor', 'description' => 'Doctor del sistema']);
+        $pacient = Role::create(['name' => 'Paciente', 'description' => 'Usuario del sistema']);
 
         // DASHBOARD MODEL
         $dashboard = Permission::create(['name' => 'dashboard.index', 'description' => 'Ver dashboard']);
@@ -72,6 +75,20 @@ class RolesAndPermissionsSeeder extends Seeder
             $profile2
         ]);
 
+        $secretary->syncPermissions([
+            $profile1,
+            $profile2
+        ]);
+
+        $doctor->syncPermissions([
+            $profile1,
+            $profile2
+        ]);
+
+        $pacient->syncPermissions([
+            $profile1,
+            $profile2
+        ]);
 
         $user_admin = User::create([
             'name' => 'Anthony Steven',

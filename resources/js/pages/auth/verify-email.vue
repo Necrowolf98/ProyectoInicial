@@ -1,52 +1,38 @@
 <template>
-  <guest-layout>
-    <v-main>
-      <v-container fluid>
-        <v-row align="center" justify="center" style="height: 100vh">
-          <v-col cols="12" sm="12" md="10" lg="4">
-            <v-card>
-              <v-card-title class="d-flex align-center justify-center">
-                <Link :href="route('/')">
-                  <application-logo style="height: 75" />
-                </Link>
-              </v-card-title>
-              <v-card-text>
-                <p class="font-weight-semibold text--primary mb-2">
-                  Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.
-                </p>
-              </v-card-text>
-              <v-card-text>
-                <v-form @submit.prevent="submit">
-                  <v-btn type="submit" block color="primary" class="mt-3"
-                    >Send Verification Email</v-btn
-                  >
-                </v-form>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-main>
-  </guest-layout>
-</template>
+<guest-login>
+    <div v-if="status">
+        <v-alert type="success">{{ status }}</v-alert>
+    </div>
 
+    <p class="login-box-msg text-justify">
+        Gracias por registrarte! Antes de comenzar, ¿podría verificar su dirección de correo electrónico haciendo clic en el enlace que le acabamos de enviar? Si no recibiste el correo electrónico, con gusto te enviaremos otro.
+    </p>
+
+    <v-form @submit.prevent="submit">
+        <v-btn :disabled="form.processing" :loading="form.processing" type="submit" block color="primary">Solicitar enlace de verificación</v-btn>
+    </v-form>
+</guest-login>
+</template>
 <script>
-import ApplicationLogo from "../../components/ApplicationLogo.vue";
-import GuestLayout from '../../layouts/GuestLayout.vue';
+import GuestLogin from '../../layouts/GuestLogin.vue';
 
 export default {
-  components: { ApplicationLogo, GuestLayout },
-  data() {
-    return {
-      showPassword: false,
-      isLoading: false,
-      form: this.$inertia.form(),
-    };
-  },
-  methods: {
-    submit() {
-      this.form.post(this.route('verification.send'));
+    components: { GuestLogin },
+    props: { status: String },
+    
+    data() {
+        return {
+            form: this.$inertia.form({
+                email: null,
+            }),
+        };
     },
-  },
-};
+    
+
+    methods: {
+        submit() {
+            this.form.post(this.route('verification.send'));
+        },
+    },  
+}
 </script>

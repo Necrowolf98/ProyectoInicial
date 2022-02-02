@@ -29,7 +29,10 @@
                             </v-avatar>
                         </div>
                         <p class="text-muted text-center my-0 p_logout"><strong>{{ auth.user.name.split(' ', 1)+ ' ' +auth.user.lastname }}</strong></p>
-                        <p class="text-muted text-center my-0 py-1 p_logout"><strong>Rol: </strong>{{ auth.user.roles[0].name }}</p>
+                        <p class="text-muted text-center my-0 py-1 p_logout">
+                            <strong>Roles: </strong>
+                            <span v-for="(item, index) in auth.roles" :key="index">{{ item+', ' }}</span>
+                        </p>
                         <p class="text-center text-muted mx-3 mb-0 p_logout">{{ auth.user.email }}</p>
 
                         <div class="text-center mt-2">
@@ -142,7 +145,7 @@
 <script>
     export default {
         props: ["auth"],
-
+        
         methods: {
             logout() {
                 this.$inertia.post("/logout");

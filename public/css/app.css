@@ -69,6 +69,12 @@ button:focus {
 }
 
 /* VUETIFY V-CHECKBOX PONERLO CENTRADO AL CUADRITO */
+/* VUETIFY V-SELECT */
+.v-select.v-text-field--outlined:not(.v-text-field--single-line).input_form_select.v-input--dense .v-select__selections {
+  padding: 0px 0 !important;
+}
+
+/* VUETIFY V-SELECT */
 html {
   overflow-y: auto !important;
 }

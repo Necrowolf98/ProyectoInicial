@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\User\StoreRequest;
-use App\Http\Requests\User\UpdateRequest;
+use App\Models\Role;
 use App\Models\User;
 use Inertia\Inertia;
+use App\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\User\StoreRequest;
+use App\Http\Requests\User\UpdateRequest;
 
 class UserController extends Controller
 {
@@ -23,8 +25,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-
-        $user = new User();
+        $user = auth()->user()->visible_users();
 
         if($request->has('sortBy')){
             if($request->get('sortDesc') === 'true'){
@@ -45,13 +46,18 @@ class UserController extends Controller
 
         $search = $request->get('search');
 
-        $user = $user->where('name', 'LIKE', "%$search%")
-        ->orWhere('lastname', 'LIKE', "%$search%")
-        ->orderBy('id', 'desc')
+        $user = $user->where(function($query) use ($search){
+            $query->whereHas('roles', function ($query) use ($search){
+                $query->where('name', 'LIKE', "%$search%");
+            });
+            $query->orWhere('name', 'LIKE', "%$search%");
+            $query->orWhere('lastname', 'LIKE', "%$search%");
+        })->orderBy('id', 'desc')
         ->paginate($itemsPerPage);
 
         return Inertia::render('users/index', [
             'users' => $user,
+            'roles' => Role::all()
         ]);
     }
 
@@ -82,6 +88,8 @@ class UserController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
 
+        $user->syncRoles($request->role_id);
+
         return redirect()->back()->with('message', [
             'title'=> 'Exitoso!',
             'type' => 'success',
@@ -95,9 +103,13 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
-        //
+        return Inertia::render('users/show', [
+            'user' => $user,
+            'user_permission' => $user->permissions,
+            'user_permissions_by_role' => $user->getPermissionsViaRoles(),
+        ]);
     }
 
     /**
@@ -122,7 +134,8 @@ class UserController extends Controller
     {
         if(!$request == null){
             if($request->password == null){
-                $user->update($request->except('password'));    
+                $user->update($request->except('password', 'role_id'));  
+                $user->syncRoles(collect($request->role_id)->pluck('id')->toArray());
             }else{
                 $user->update([
                     'name' => $request->name,
@@ -132,6 +145,7 @@ class UserController extends Controller
                     'phone' => $request->phone,
                     'password' => Hash::make($request->password),
                 ]);    
+                $user->syncRoles(collect($request->role_id)->pluck('id')->toArray());
             }
             return redirect()->back()->with('message', [
                 'title'=> 'Exitoso!',
@@ -155,5 +169,23 @@ class UserController extends Controller
             'type' => 'success',
             'text' => 'Se ha eliminado el usuario',
         ]);
+    }
+
+    public function user_permissions(User $user){
+        return Inertia::render('users/permissions', [
+            'user' => $user,
+            'user_permission' => $user->permissions,
+            'user_permissions_by_role' => $user->getPermissionsViaRoles(),
+            'permissions' => Permission::all()
+        ]);
+    }
+
+    public function update_permissions(Request $request, User $user){
+        if($request->has('permissions')){
+            $user->givePermissionTo(collect($request->permissions)->pluck('id')->toArray());
+        }
+        $user->syncPermissions(collect($request->permissions)->pluck('id')->toArray());
+
+        return redirect()->route('users.show', $user);
     }
 }

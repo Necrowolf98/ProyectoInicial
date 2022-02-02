@@ -52,11 +52,28 @@
             'items-per-page-text': 'Filas por página',
             }">
 
-            <template v-slot:[`item.fullname`]="{ item }">
-                <span v-text="item.name.split(' ', 1) +' '+ item.lastname"></span>
+            <template v-slot:[`item.lastname`]="{ item }">
+                <span v-text="item.lastname +' '+ item.name.split(' ', 1)"></span>
+            </template>
+
+            <template v-slot:[`item.role_name`]="{ item }">
+                <div class="d-flex flex-column">
+                    <span v-for="(role, index) in item.roles" :key="index">
+                        {{ role.name }}
+                    </span>
+                </div>
             </template>
 
             <template v-slot:[`item.id`]="{ item }">
+                <v-tooltip bottom>
+                <template v-if="auth.permission.includes('users.show')" v-slot:activator="{ on, attrs }">
+                    <Link :href="route('users.show', { id: item.id })">
+                        <v-icon small color="primary" class="mr-2" v-bind="attrs" v-on="on">mdi-eye</v-icon>
+                    </Link>
+                </template>
+                <span>Ver usuario</span>
+            </v-tooltip>
+
                 <v-tooltip bottom>
                     <template v-if="auth.permission.includes('users.edit')" v-slot:activator="{ on, attrs }">
                         <v-icon small color="lime" class="mr-2" v-bind="attrs" v-on="on" @click.prevent="EditUser(item)">mdi-pencil</v-icon>
@@ -135,7 +152,7 @@
                         </v-col>
                     </v-row>
 
-                    <v-row>
+                    <v-row v-if="auth.roles.includes('Administrador')">
                         <v-col sm="4" md="3" lg="3" xl="3" class="my-0 py-0 px-0">
                             <v-subheader class="sub_header_form float-right mx-0 px-0">Clave:</v-subheader>
                         </v-col>
@@ -145,13 +162,25 @@
                         </v-col>
                     </v-row>
 
-                    <v-row>
+                    <v-row v-if="auth.roles.includes('Administrador')">
                         <v-col sm="4" md="3" lg="3" xl="3" class="my-0 py-0 px-0">
                             <v-subheader class="sub_header_form float-right mx-0 px-0">Confirmar clave:</v-subheader>
                         </v-col>
                         <v-col sm="8" md="9" lg="9" xl="9" class="my-0 py-0">
                             <v-text-field v-model="form.password_confirmation" label="Escriba la clave confirmación del usuario" prepend-inner-icon="mdi-lock" dense outlined class="input_form icons_formularios my-0 py-0" :error-messages="form.errors.password" :append-icon="show_comfirmpassword ? 'mdi-eye' : 'mdi-eye-off'" :type="show_comfirmpassword ? 'text' : 'password'" @click:append="show_comfirmpassword = !show_comfirmpassword" >
                             </v-text-field>
+                        </v-col>
+                    </v-row>
+
+                    <v-row v-if="auth.roles.includes('Administrador')">
+                        <v-col sm="4" md="3" lg="3" xl="3" class="my-0 py-0 px-0">
+                            <v-subheader class="sub_header_form float-right mx-0 px-0">Rol:</v-subheader>
+                        </v-col>
+                        <v-col sm="8" md="9" lg="9" xl="9" class="my-0 py-0">
+                            <v-select v-model="form.role_id" label="Seleccione el rol del usuario" :items="roles"
+                            item-text="name" return-object multiple dense outlined append-icon="fas fa-user-tag" class="input_form icons_formularios input_form_select my-0 py-0"
+                            :error-messages="form.errors.role_id" hint="Por ejemplo, administrador" clearable>
+                            </v-select>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -174,14 +203,15 @@ import Admin from "../../layouts/Admin.vue";
 export default {
     components: { Admin },
     
-    props: ["users", "auth"],
+    props: ["users", "roles", "auth"],
 
     data() {
         return {
             headers: [
-                { text: "Usuario", value: "fullname" },
+                { text: "Usuario", value: "lastname" },
                 { text: "Celular", value: "phone" },
                 { text: "Correo", value: "email" },
+                {text: 'Roles', value: 'role_name'},
                 { text: "Fecha de creación", value: "created_at" },
                 {text: 'Acciones', value: 'id', sortable: false}
             ],
@@ -206,7 +236,8 @@ export default {
                 email: null,
                 phone: null,
                 password: null,
-                password_confirmation: null
+                password_confirmation: null,
+                role_id: [],
             }),
         };
     },
@@ -268,6 +299,7 @@ export default {
             this.form.phone = item.phone;
             this.isUpdate = true;
             this.itemId = item.id;
+            this.form.role_id = item.roles;
             this.dialog = true;
         },
 

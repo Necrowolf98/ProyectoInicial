@@ -1,76 +1,67 @@
 <template>
-  <guest-layout>
-    <v-main>
-      <v-container fluid>
-        <v-row align="center" justify="center" style="height: 100vh">
-          <v-col cols="12" sm="12" md="10" lg="4">
-            <v-card>
-              <v-card-title class="d-flex align-center justify-center">
-                <Link :href="route('/')">
-                  <application-logo style="height: 75" />
-                </Link>
-              </v-card-title>
-              <v-card-text>
-                <p class="text-2xl font-weight-semibold text--primary mb-2">Adventure starts here 🚀</p>
-                <p class="mb-2">Make your app management easy and fun!</p>
-              </v-card-text>
-              <v-card-text>
-                <v-form @submit.prevent="register">
-                  <v-text-field v-model="form.name" prepend-inner-icon="mdi-account" label="Name" outlined dense type="text" :error-messages="form.errors.name" />
+<v-app>
+    <div class="register-page">
+        <div class="register-box">
+            <div class="card card-outline card-primary">
+                <div class="card-header text-center">
+                    <Link :href="route('/')" class="h1"><b>Admin</b>LTE</Link>
+                </div>
+                <div class="card-body">
+                    <p class="login-box-msg p-0">Registrar una nueva membresía</p>
+                    <v-form @submit.prevent="register">
+                        <v-text-field class="input_form" v-model="form.name" prepend-inner-icon="mdi-account" label="Ingrese sus nombres" outlined dense type="text" :error-messages="form.errors.name">
+                        </v-text-field>
 
-                  <v-text-field v-model="form.lastname" prepend-inner-icon="mdi-account" label="Lastname" outlined dense type="text" :error-messages="form.errors.lastname" />
+                        <v-text-field class="input_form" v-model="form.lastname" prepend-inner-icon="mdi-account" label="Ingrese sus apellidos" outlined dense type="text" :error-messages="form.errors.lastname">
+                        </v-text-field>
 
-                  <v-text-field v-model="form.direction" prepend-inner-icon="mdi-account" label="Direction" outlined dense type="text" :error-messages="form.errors.direction" />
+                        <v-text-field class="input_form" v-model="form.direction" prepend-inner-icon="fas fa-road" label="Ingrese su dirección" outlined dense type="text" :error-messages="form.errors.direction">
+                        </v-text-field>
 
-                  <v-text-field v-model="form.email" prepend-inner-icon="mdi-email" label="Email" type="email" outlined dense :error-messages="form.errors.email" />
+                        <v-text-field class="input_form" v-model="form.email" prepend-inner-icon="mdi-email" label="Ingrese su correo" type="Ingrese su email" outlined dense :error-messages="form.errors.email">
+                        </v-text-field>
 
-                  <v-text-field v-model="form.phone" prepend-inner-icon="mdi-account" label="Phone" outlined dense type="text" :error-messages="form.errors.phone" />
+                        <v-text-field class="input_form" v-model="form.phone" prepend-inner-icon="fas fa-phone-alt" label="Ingrese su teléfono" outlined dense type="text" :error-messages="form.errors.phone">
+                        </v-text-field>
 
-                  <v-text-field v-model="form.password" prepend-inner-icon="mdi-lock" label="Password" outlined dense :error-messages="form.errors.password" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" />
+                        <v-text-field class="input_form" v-model="form.password" prepend-inner-icon="mdi-lock" label="Ingrese su clave" outlined dense :error-messages="form.errors.password" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword">
+                        </v-text-field>
 
-                  <v-text-field v-model="form.password_confirmation" prepend-inner-icon="mdi-lock" label="Password Confirmation" :error-messages="form.errors.password_confirmation" outlined dense :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword" />
+                        <v-text-field class="input_form" v-model="form.password_confirmation" prepend-inner-icon="mdi-lock" label="Confirme su clave" :error-messages="form.errors.password" outlined dense :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :type="showPassword ? 'text' : 'password'" @click:append="showPassword = !showPassword">
+                        </v-text-field>
 
-                  <v-btn :loading="form.processing" type="submit" block color="primary" class="mt-3">Register</v-btn>
-                </v-form>
-              </v-card-text>
+                        <v-btn :disabled="form.processing" :loading="form.processing" type="submit" block color="primary" class="my-2">Registrarse</v-btn>
+                    </v-form>
 
-              <v-card-text class="d-flex align-center justify-center flex-wrap mt-2">
-                <span class="me-2"> Already have an account? </span>
-                <Link :href="route('login')"> Sign in instead </Link>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-main>
-  </guest-layout>
+                    <Link :href="route('login')" class="text-center">Tengo una membresia</Link>
+                </div>
+            </div>
+        </div>
+    </div>
+</v-app>
 </template>
 
 <script>
-import ApplicationLogo from "../../components/ApplicationLogo.vue";
-import GuestLayout from '../../layouts/GuestLayout.vue';
 export default {
-  components: { ApplicationLogo, GuestLayout },
-  data() {
-    return {
-      showPassword: false,
-      isLoading: false,
+    data() {
+        return {
+            showPassword: false,
 
-      form: this.$inertia.form({
-        name: null,
-        lastname: null,
-        direction: null,
-        email: null,
-        phone: null,
-        password: null,
-        password_confirmation: null,
-      }),
-    };
+            form: this.$inertia.form({
+                name: null,
+                lastname: null,
+                direction: null,
+                email: null,
+                phone: null,
+                password: null,
+                password_confirmation: null,
+            }),
+        };
   },
-  methods: {
-    register() {
-      this.form.post("/register");
+    methods: {
+        register() {
+            this.form.post("/register");
+        },
     },
-  },
-};
+}
 </script>

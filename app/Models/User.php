@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasRoles, HasApiTokens, HasFactory, Notifiable;
 
@@ -51,4 +51,21 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'created_at' => CreatedAtCast::class,
     ];
+
+
+    
+    public function visible_users(){
+        if($this->hasRole('Administrador')){
+            $users = self::with('roles');
+        }elseif($this->hasRole('Secretaria')){
+            $users = self::with('roles')->whereHas('roles',function($q){
+                $q->whereIn('name', ['Doctor', 'Paciente']);
+            });
+        }elseif($this->hasRole('Doctor')){
+            $users = self::with('roles')->whereHas('roles',function($q){
+                $q->whereIn('name',['Paciente']);
+            });
+        }
+        return $users;
+    }
 }

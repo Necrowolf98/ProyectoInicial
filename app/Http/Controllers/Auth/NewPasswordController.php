@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Auth\Events\PasswordReset;
+use Inertia\Inertia;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rules;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Validation\ValidationException;
-use Inertia\Inertia;
+use App\Http\Requests\Auth\NewPasswordResetRequest;
 
 class NewPasswordController extends Controller
 {
@@ -36,17 +37,8 @@ class NewPasswordController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request)
+    public function store(NewPasswordResetRequest $request)
     {
-        $request->validate([
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
-
-        // Here we will attempt to reset the user's password. If it is successful we
-        // will update the password on an actual user model and persist it to the
-        // database. Otherwise we will parse the error and return the response.
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) use ($request) {
@@ -59,15 +51,15 @@ class NewPasswordController extends Controller
             }
         );
 
-        // If the password was successfully reset, we will redirect the user back to
-        // the application's home authenticated view. If there is an error we can
-        // redirect them back to where they came from with their error message.
+
         if ($status == Password::PASSWORD_RESET) {
-            return redirect()->route('login')->with('status', __($status));
+            return redirect()->route('login')->with('status', 'Tu contraseña ha sido restablecida.!');
         }
 
         throw ValidationException::withMessages([
-            'email' => [trans($status)],
+            'email' => [(trans($status) == 'This password reset token is invalid.') 
+            ? 'Su token de restablecimiento de contraseña no es válido. Por favor generar otro enlace.' 
+            : 'No podemos encontrar un usuario con esa dirección de correo electrónico, debido a que modifico en enlace. Por favor generar otro enlace.'],
         ]);
     }
 }

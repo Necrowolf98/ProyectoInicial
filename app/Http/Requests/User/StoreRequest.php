@@ -30,6 +30,7 @@ class StoreRequest extends FormRequest
             'email' => 'required|email|unique:users',
             'phone' => 'required|string|max:255',
             'password' => 'required|string|min:6|confirmed',
+            'role_id' => 'required'
         ];
     }
 
@@ -47,6 +48,7 @@ class StoreRequest extends FormRequest
             'password.required' => 'El campo clave es requerido',
             'password.min' => 'Tu clave debe tener almenos 6 caracteres',
             'password.confirmed' => 'Las clave no coinciden',
+            'role_id.required' => 'El campo rol de usuario es requerido'
         ];
     }
 }
