@@ -7,11 +7,11 @@
     <p class="login-box-msg">Inicia sesión para comenzar</p>
     <v-form @submit.prevent="login">
         <v-text-field v-model="form.email" prepend-inner-icon="mdi-email" label="Ingrese su correo electrónico" type="email" outlined dense :error-messages="form.errors.email"></v-text-field>
-        <v-text-field v-model="form.password" prepend-inner-icon="mdi-lock" label="Ingrese su clave" outlined dense :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :type="showPassword ? 'text' : 'password'" :error-messages="form.errors.email" @click:append="showPassword = !showPassword"></v-text-field>
+        <v-text-field v-model="form.password" prepend-inner-icon="mdi-lock" label="Ingrese su clave" outlined dense :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :type="showPassword ? 'text' : 'password'" :error-messages="form.errors.password" @click:append="showPassword = !showPassword"></v-text-field>
         <div class="row">
-            <div class="col-6 mt-2">
+            <div class="col-6 mt-1">
                 <div class="icheck-primary">
-                    <input type="checkbox" id="remember">
+                    <input v-model="form.remember"  type="checkbox" id="remember">
                     <label for="remember">Recordarme</label>
                 </div>
             </div>
@@ -46,7 +46,7 @@ export default {
             form: this.$inertia.form({
                 email: null,
                 password: null,
-                remember_me: false,
+                remember: false,
             }),
         };
     },
